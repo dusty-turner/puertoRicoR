@@ -403,27 +403,4 @@ twbarplot = function(filename = "best.csv"){
       }
 }
 
-#' helper function
-#'
-#' helper:
-#' @param filename "Puerto Rico 23 Sept - 26 OCT best.csv"
-#' @keywords Puerto Rico
-#' @export
-#' @examples
-#' helper()
-
-helpme = function(filename = "best.csv"){
-
-
-  require(tidyr)
-  require(dplyr)
-  require(tidytext)
-  require(ggplot2)
-  require(lubridate)
-
-  df = system.file("extdata", "best.csv", package = "puertoRicoR")
-  df = read.csv(df)
-  df = df$created
-  return(df)
-}
 
