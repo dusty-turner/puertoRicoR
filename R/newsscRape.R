@@ -30,7 +30,7 @@ google <- c("https://www.google.com/search?q=Puerto+Rico&num=100&tbs=sbd:1,qdr:m
 headlinelist = list()
 blurblist = list()
 originslist = list()
-i=8
+
 for(i in 1:length(google)){
   headlines <- google[i] %>%
     read_html() %>%
