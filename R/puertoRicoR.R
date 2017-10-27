@@ -149,7 +149,9 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
                 filter(sentiment=="positive"))
   bing = get_sentiments("bing")
   afinn = get_sentiments("afinn")
-  nrcspanish = read.csv("NRCSpanish.csv")
+
+  df = system.file("extdata", "NRCSpanish.csv", package = "puertoRicoR")
+  nrcspanish = read.csv(df)
 
   max(cleanedarticle$time)
   min(cleanedarticle$time)
