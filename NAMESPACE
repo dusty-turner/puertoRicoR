@@ -3,3 +3,4 @@
 export(helpme)
 export(pRanalysis)
 export(pRtwitter)
+export(twbarplot)
