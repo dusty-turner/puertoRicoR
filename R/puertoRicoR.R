@@ -231,7 +231,7 @@ twbarplot = function(filename = "best.csv"){
   require(lubridate)
 
   if(file.exists(filename)==TRUE){
-    df.tweet = read.csv("filename")
+    df.tweet = read.csv(filename)
     df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
     # df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
     df.tweet = df.tweet[,-c(1)]
