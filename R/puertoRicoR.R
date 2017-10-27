@@ -107,8 +107,8 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
   require(lubridate)
 
   df.tweet = read.csv(filename)
-  df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
-  # df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
+  # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
+  df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
   df.tweet = df.tweet[,-c(1)]
   max(df.tweet$created)
   df.tweet = df.tweet[which(!is.na(df.tweet$text)),]
