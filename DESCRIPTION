@@ -1,10 +1,19 @@
 Package: puertoRicoR
-Title: What the Package Does (one line, title case)
+Title: Puerto Rico Deployability Package
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Dusty", "Turner", email = "dusty.s.turner@gmail.com", role = c("aut", "cre"))
+Description: This package makes the analysis of sentiment in Puerto Rico deployable.
 Depends: R (>= 3.4.2)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1.9000
+Imports:
+  twitteR,
+  ROAuth,
+  httr,
+  tidyr,
+  dplyr,
+  tidytext,
+  ggplot2,
+  lubridate
