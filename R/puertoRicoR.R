@@ -197,10 +197,7 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 }
 
 
-
-
-
-#' admin function
+#' helper function
 #'
 #' helper:
 #' @param filename "Puerto Rico 23 Sept - 26 OCT best.csv"
