@@ -2,6 +2,7 @@
 
 export(anysearchTwitter)
 export(helpmes)
+export(newsscRape)
 export(pRanalysis)
 export(pRtwitter)
 export(twbarplot)
