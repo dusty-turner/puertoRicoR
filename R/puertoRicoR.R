@@ -45,10 +45,10 @@ pRtwitter = function(searchterm = "Puerto Rico", n = 100000, since = '2017-10-25
   ################MERGE NEW DATA WITH OLD
 
   if(file.exists(olddataname)==TRUE){
-
+# olddataname = "Puerto Rico 23 Sept - 26 OCT best.csv"
     df.tweet = read.csv(olddataname)
-    df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
-    # df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
+    # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
+    df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
     df.tweet = df.tweet[,-c(1)]
 
     #Adding newest data to old data in a csv
@@ -194,5 +194,35 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
     labs(x="Date", y="Sentiment Score")
 
   return(plot)
+}
+
+
+
+
+
+#' admin function
+#'
+#' admin:
+#' @param filename "Puerto Rico 23 Sept - 26 OCT best.csv"
+#' @keywords Puerto Rico
+#' @export
+#' @examples
+#' admin()
+
+admin = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
+
+
+  require(tidyr)
+  require(dplyr)
+  require(tidytext)
+  require(ggplot2)
+  require(lubridate)
+
+  df.tweet = read.csv(filename)
+  df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
+  # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
+  show = df.tweet$created
+
+  return(show)
 }
 
