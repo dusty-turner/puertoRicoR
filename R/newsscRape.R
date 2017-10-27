@@ -79,34 +79,21 @@ googleheadlines = data_frame(Source = Source, Date = Date, Title = headlines, Na
 googleheadlines %>%
   arrange(desc(Date))
 
-min(googleheadlines$Date)
 
-# write.csv(googleheadlines, "googleheadlines.csv")
-
-# news = read.csv("r_News_25OCT17.csv")
 news = read.csv(oldfile)
 
-# news = news[which(complete.cases(news)),]
+
 
 news$Date = as_date(news$Date)
-# news$Date = news$Date-years(70)
-# news$Date = news$Date-days(1)
-# news$Date = as.POSIXct(news$Date)
 
-
-names(news)
 news = news[,-1]
-names(googleheadlines)
 
-nrow(news)
-head(news)
 test = full_join(news, googleheadlines, by = c("Source", "Title", "Narrative"))
 test$Date = as.POSIXlt(ifelse(is.na(test$Date.x),as.character(test$Date.y),as.character(test$Date.x)))
 test = test[,c(1,2,3,6)]
-names(test)
-nrow(test)
+
 distinct(test)
-head(test)
+
 write.csv(test, newfile)
 
 return(paste("google scrape complete", newfile, "saved with", nrow(test), "rows"))
