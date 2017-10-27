@@ -216,7 +216,8 @@ helpme = function(filename = "best.csv"){
   require(lubridate)
 
   df = system.file("extdata", "best.csv", package = "puertoRicoR")
-
+  df = read.csv(df)
+  df = df$created
   return(df)
 }
 
