@@ -206,7 +206,7 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 #' @examples
 #' helper()
 
-helpme = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
+helpme = function(filename = "best.csv"){
 
 
   require(tidyr)
@@ -217,6 +217,6 @@ helpme = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 
   df = system.file("extdata", "best.csv", package = "puertoRicoR")
 
-  return(df$created)
+  return(df)
 }
 
