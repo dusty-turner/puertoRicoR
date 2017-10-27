@@ -186,7 +186,7 @@ anysearchTwitter = function(searchterm = "Anywhere",
     motherofalldataframes$latitude = as.numeric(motherofalldataframes$latitude)
     motherofalldataframes$created = as_datetime(motherofalldataframes$created)
     motherofalldataframes$text = iconv(motherofalldataframes$text, from="UTF-8", to="ASCII", "byte")
-    df.tweet =
+    df.tweet = motherofalldataframes
     # df.tweet = distinct((full_join(df.tweet, motherofalldataframes, by = c("text", "created"))))
     df.tweet = df.tweet[which(!is.na(df.tweet$text)),]
     write.csv(df.tweet, newdataname)
