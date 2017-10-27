@@ -77,7 +77,7 @@ pRtwitter = function(searchterm = "Puerto Rico", n = 100000, since = '2017-10-25
     # motherofalldataframes$score = 0
     motherofalldataframes$text = iconv(motherofalldataframes$text, from="UTF-8", to="ASCII", "byte")
     df.tweet = motherofalldataframes
-    write.csv(df.tweet, olddataname)
+    write.csv(df.tweet, newdataname)
     return(paste("Your New Data Has Been Saved To", newdataname))
 
   }
