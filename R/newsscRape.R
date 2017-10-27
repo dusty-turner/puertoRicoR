@@ -76,8 +76,7 @@ Date[is.na(Date)] = as.Date(Date1[is.na(Date)], "%b %d, %Y") + days(1)
 Date = trunc.POSIXt(Date, "days")
 Date = as.POSIXct(Date)
 googleheadlines = data_frame(Source = Source, Date = Date, Title = headlines, Narrative = blurb)
-googleheadlines %>%
-  arrange(desc(Date))
+
 
 
 news = read.csv(oldfile)
@@ -92,7 +91,7 @@ test = full_join(news, googleheadlines, by = c("Source", "Title", "Narrative"))
 test$Date = as.POSIXlt(ifelse(is.na(test$Date.x),as.character(test$Date.y),as.character(test$Date.x)))
 test = test[,c(1,2,3,6)]
 
-distinct(test)
+test = unique(test)
 
 write.csv(test, newfile)
 
