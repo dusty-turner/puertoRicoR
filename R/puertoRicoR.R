@@ -24,6 +24,7 @@ pRtwitter = function(searchterm = "Puerto Rico", n = 100000, since = '2017-10-25
   require(ggplot2)
   require(lubridate)
 
+
   # Set API Keys
   api_key <- "t2Z0bBeYOEKf57x1fwioYHWj5"
   api_secret <- "ogeOnkBpGscHH0HrEaZwnzKp4gnm5g38SiWqwZ8lHbDFHGv5QN"
