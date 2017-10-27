@@ -202,14 +202,14 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 
 #' admin function
 #'
-#' admin:
+#' helper:
 #' @param filename "Puerto Rico 23 Sept - 26 OCT best.csv"
 #' @keywords Puerto Rico
 #' @export
 #' @examples
-#' admin()
+#' helper()
 
-admin = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
+helpme = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 
 
   require(tidyr)
