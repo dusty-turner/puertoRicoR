@@ -99,7 +99,7 @@ pRtwitter = function(searchterm = "Puerto Rico", n = 100000, since = '2017-10-25
 
 pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 
-
+  system.file("extdata", "Puerto Rico 23 Sept - 26 OCT best.csv", package = "puertoRicoR")
   require(tidyr)
   require(dplyr)
   require(tidytext)
