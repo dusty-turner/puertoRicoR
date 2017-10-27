@@ -99,7 +99,7 @@ pRtwitter = function(searchterm = "Puerto Rico", n = 100000, since = '2017-10-25
 
 pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
 
-  system.file("extdata", "Puerto Rico 23 Sept - 26 OCT best.csv", package = "puertoRicoR")
+
   require(tidyr)
   require(dplyr)
   require(tidytext)
@@ -218,11 +218,8 @@ admin = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
   require(ggplot2)
   require(lubridate)
 
-  df.tweet = read.csv(filename)
-  df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
-  # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
-  show = df.tweet$created
+  df = system.file("extdata", "best.csv", package = "puertoRicoR")
 
-  return(show)
+  return(df$created)
 }
 
