@@ -15,6 +15,7 @@ pRanalysis = function(filename = "Puerto Rico 23SEP - 1NOV.csv"){
   require(tidytext)
   require(ggplot2)
   require(lubridate)
+  require(zoo)
   # filename = "testingagainR.csv"
   df.tweet = read.csv(filename)
   df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
