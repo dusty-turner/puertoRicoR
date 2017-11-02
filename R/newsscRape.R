@@ -6,7 +6,7 @@
 #' @examples
 #' newspull
 
-newsscRape = function(oldfile = "R_News_25OCT17a.csv", newfile = "R_News_1NOV17.csv"){
+newsscRape = function(oldfile = "R_News_1NOV17.csv", newfile = "R_News_1NOV17.csv"){
 
 library(rvest)
 library(lubridate)

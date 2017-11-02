@@ -4,7 +4,7 @@
 \alias{pRanalysis}
 \title{Puerto Rico Sentiment Tracking Function}
 \usage{
-pRanalysis(filename = "Puerto Rico 23 Sept - 26 OCT best.csv")
+pRanalysis(filename = "Puerto Rico 23SEP - 1NOV.csv")
 }
 \arguments{
 \item{filename}{"Puerto Rico 23 Sept - 26 OCT best.csv"}

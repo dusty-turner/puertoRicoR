@@ -4,7 +4,7 @@
 \alias{newsscRape}
 \title{update news}
 \usage{
-newsscRape(oldfile = "R_News_25OCT17a.csv", newfile = "R_News_27OCT17a.csv")
+newsscRape(oldfile = "R_News_1NOV17.csv", newfile = "R_News_1NOV17.csv")
 }
 \description{
 updatenews: This function updates your news search for "Puerto Rico" and saves it to the working directory
