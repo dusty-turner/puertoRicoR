@@ -6,7 +6,7 @@
 #' @examples
 #' newspull
 
-newsscRape = function(oldfile = "R_News_25OCT17a.csv", newfile = "R_News_27OCT17a.csv"){
+newsscRape = function(oldfile = "R_News_25OCT17a.csv", newfile = "R_News_1NOV17.csv"){
 
 library(rvest)
 library(lubridate)
@@ -53,7 +53,7 @@ for(i in seq_along(google)){
   headlinelist[[i]] = headlines
   blurblist[[i]] = blurb
   originslist[[i]] = origins
-  Sys.sleep(sample(10, 1) * 0.1)
+  Sys.sleep(sample(10, 1) * 1)
 }
 headlines = unlist(headlinelist)
 blurb = unlist(blurblist)

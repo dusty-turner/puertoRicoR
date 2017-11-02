@@ -7,7 +7,7 @@
 #' @examples
 #' pRtwitter()
 
-pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
+pRanalysis = function(filename = "Puerto Rico 23SEP - 1NOV.csv"){
 
 
   require(tidyr)
@@ -71,36 +71,41 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 26 OCT best.csv"){
     group_by(windowday) %>%
     summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
     mutate(sentavg = netsent/totalsent) %>%
-    mutate(Lexicon = "Bing")
+    mutate(Lexicon = "Bing") %>%
+    mutate(rollingmean = rollmean(x = sentavg, 24, align = "right", fill = NA))
 
   plottingsentimentafinn = tweetsentimentafinn %>%
     mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("hours")))) %>%
     group_by(windowday) %>%
     summarise(netsent = sum(score), totalsent = sum(abs(score))) %>%
     mutate(sentavg = netsent/totalsent) %>%
-    mutate(Lexicon = "Afinn")
+    mutate(Lexicon = "Afinn") %>%
+    mutate(rollingmean = rollmean(x = sentavg, 24, align = "right", fill = NA))
 
   plottingsentimentnrc = tweetsentimentnrc %>%
     mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("hours")))) %>%
     group_by(windowday) %>%
     summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
     mutate(sentavg = netsent/totalsent) %>%
-    mutate(Lexicon = "NRC English")
+    mutate(Lexicon = "NRC English") %>%
+    mutate(rollingmean = rollmean(x = sentavg, 24, align = "right", fill = NA))
 
   plottingsentimentnrcspanish = tweetsentimentnrcspanish %>%
     mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("hours")))) %>%
     group_by(windowday) %>%
     summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
     mutate(sentavg = netsent/totalsent) %>%
-    mutate(Lexicon = "NRC Spanish")
+    mutate(Lexicon = "NRC Spanish") %>%
+    mutate(rollingmean = rollmean(x = sentavg, 24, align = "right", fill = NA))
 
   # plottingsentiment = bind_rows(plottingsentimentbing,plottingsentimentafinn,plottingsentimentnrc)
   # plottingsentiment = bind_rows(plottingsentimentbing,plottingsentimentafinn,plottingsentimentnrc,plottingsentimentnrcspanish)
   plottingsentiment = bind_rows(plottingsentimentnrc,plottingsentimentnrcspanish)
 
-  plot =  ggplot(data=plottingsentiment, aes(x=windowday, y = sentavg, color = Lexicon)) +
+  plot =  ggplot(data=plottingsentiment, aes(x=windowday, y = rollingmean, color = Lexicon)) +
     ylim(c(-1,1)) +
-    geom_smooth(span = .5) +
+    geom_smooth(span = .10, aes(y = sentavg)) +
+    # geom_line() +
     ggtitle("Twitter Sentiment Score Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
     labs(x="Date", y="Sentiment Score")
