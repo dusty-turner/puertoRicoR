@@ -7,7 +7,7 @@
 #' @examples
 #' googlenewschaRt
 
-googlenewschaRt = function(filename = "R_News_1NOV17.csv"){
+googlenewschaRt = function(filename = "R_News_4NOV17.csv"){
 
 
   library(lubridate)
@@ -15,7 +15,7 @@ googlenewschaRt = function(filename = "R_News_1NOV17.csv"){
   library(tidytext)
   library(ggplot2)
 
-  news = read.csv("R_News_1NOV17.csv")
+  news = read_csv(filename)
   news = news[which(complete.cases(news)),]
   news$Date = as_date(news$Date)
   news = news[which(!is.na(news$Date)),]
@@ -88,7 +88,7 @@ googlenewschaRt = function(filename = "R_News_1NOV17.csv"){
   sources = length(news$Source)
   uniquesources = length(unique(news$Source))
 
-plot = ggplot(data = news.df, aes(x = windowday, y = sentavg, color = lexicon)) +
+  plot = ggplot(data = news.df, aes(x = windowday, y = sentavg, color = lexicon)) +
     ylim(-1,1) +
     # geom_smooth(span = .5) +
     geom_smooth(method = loess, span = .01) +
@@ -97,7 +97,70 @@ plot = ggplot(data = news.df, aes(x = windowday, y = sentavg, color = lexicon)) 
     labs(caption=paste(sources, "Articles from", uniquesources,"different sources \n", "Top News Sources:", top6)) +
     xlab(NULL) + ylab("Sentiment")
 
+  nrcfacetneg = tweetsentimentnrc %>%
+    group_by(Company) %>%
+    summarise(totalsentbysource = sum(abs(sentimentnum))) %>%
+    arrange(desc(totalsentbysource)) %>%
+    top_n(10) %>%
+    inner_join(tweetsentimentnrc) %>%
+    select(Company, Date, word, sentiment, sentimentnum) %>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(Date, units = c("days")))) %>%
+    group_by(windowday, sentiment, Company) %>%
+    summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
+    arrange(Company, windowday) %>%
+    mutate(sentavg = netsent/totalsent) %>%
+    mutate(Lexicon = "NRC") %>%
+    group_by(windowday, Company) %>%
+    filter(sentiment=="negative") %>%
+    arrange(windowday) %>%
+    ungroup()
 
+  nrcfacetpos = tweetsentimentnrc %>%
+    group_by(Company) %>%
+    summarise(totalsentbysource = sum(abs(sentimentnum))) %>%
+    arrange(desc(totalsentbysource)) %>%
+    top_n(10) %>%
+    inner_join(tweetsentimentnrc) %>%
+    select(Company, Date, word, sentiment, sentimentnum) %>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(Date, units = c("days")))) %>%
+    group_by(windowday, sentiment, Company) %>%
+    summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
+    arrange(Company, windowday) %>%
+    mutate(sentavg = netsent/totalsent) %>%
+    mutate(Lexicon = "NRC") %>%
+    group_by(windowday, Company) %>%
+    filter(sentiment=="positive") %>%
+    ungroup()
 
-  return(plot)
+  weeksneg <- unique(nrcfacetneg$windowday)
+  plansneg <- unique(nrcfacetneg$Company)
+  combinationsneg <- expand.grid(windowday = weeksneg, Company = plansneg)
+
+  weekspos <- unique(nrcfacetpos$windowday)
+  planspos <- unique(nrcfacetpos$Company)
+  combinationspos <- expand.grid(windowday = weekspos, Company = planspos)
+
+  nrcfacetneg = full_join(nrcfacetneg, combinationsneg, by = c("windowday" = "windowday", "Company" = "Company")) %>%
+    arrange(Company,windowday) %>%
+    mutate(netsent = ifelse(is.na(netsent), -.0001, netsent)) %>%
+    arrange(windowday)
+
+  nrcfacetpos = full_join(nrcfacetpos, combinationspos, by = c("windowday" = "windowday", "Company" = "Company")) %>%
+    arrange(Company,windowday) %>%
+    mutate(netsent = ifelse(is.na(netsent), .0001, netsent)) %>%
+    arrange(windowday)
+
+  plot2 = ggplot() +
+    geom_area(data = nrcfacetneg, aes(x = windowday, y = netsent, fill = Company), position = "stack") +
+    geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = "stack") +
+    # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = 'stack')
+    # scale_y_reverse() +
+    # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company))) +
+    ggtitle("Sentiment Added By Top News Sources") +
+    labs(caption=paste("Plot created:", Sys.Date())) +
+    labs(x="Date", y="Net Sentiment Added")
+
+  plotlist = list(plot,plot2)
+
+  return(plotlist)
 }
