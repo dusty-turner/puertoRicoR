@@ -104,7 +104,7 @@ plot = ggplot(data = news.df, aes(x = windowday, y = sentavg)) +
     geom_smooth(method = loess, span = .01) +
     geom_line(data = addition, aes(y=scaledn)) +
     ggtitle("News Sentiment Score and Volume Over Time", subtitle = paste("From", substr(min(news.df$windowday),1,10),"through",substr(max(news.df$windowday),1,10))) +
-    labs(caption=paste(sources, "Articles from", uniquesources,"different sources \n", "Top News Sources:", top6)) +
+    labs(caption=paste(sources, "Articles from", uniquesources,"different sources \n", "Top News Sources:", top6, "\n Plot created:", Sys.Date())) +
     xlab(NULL) + ylab("Sentiment") +
     scale_y_continuous(
       "Total Sentiment",
@@ -198,7 +198,7 @@ plot2 = ggplot() +
     # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = 'stack')
     # scale_y_reverse() +
     # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company))) +
-    ggtitle("News Sentiment by Source and Volume Over Time") +
+    ggtitle("News Sentiment by Source and Volume Over Time", subtitle = paste("From", substr(min(news.df$windowday),1,10),"through",substr(max(news.df$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
     labs(x="Date", y="Net Sentiment Added") +
     scale_y_continuous(
@@ -211,4 +211,3 @@ plot2 = ggplot() +
 
   return(plotlist)
 }
-
