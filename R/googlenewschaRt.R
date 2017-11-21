@@ -36,10 +36,10 @@ googlenewschaRt = function(filename = "R_News_21NOV17.csv"){
   cleanedarticle = anti_join(cleanedarticle,dropwords, by = "word")
 
 
-  tweetsentimentbing = cleanedarticle %>%
-    inner_join(get_sentiments("bing"))
-  tweetsentimentafinn = cleanedarticle %>%
-    inner_join(get_sentiments("afinn"))
+  # tweetsentimentbing = cleanedarticle %>%
+  #   inner_join(get_sentiments("bing"))
+  # tweetsentimentafinn = cleanedarticle %>%
+  #   inner_join(get_sentiments("afinn"))
   nrc = get_sentiments("nrc")
   nrc = nrc %>%
     filter(sentiment=="negative") %>%
@@ -48,26 +48,26 @@ googlenewschaRt = function(filename = "R_News_21NOV17.csv"){
   tweetsentimentnrc = cleanedarticle %>%
     inner_join(nrc)
 
-  tweetsentimentbing$sentimentnum = ifelse(tweetsentimentbing$sentiment=="positive",1,-1)
+  # tweetsentimentbing$sentimentnum = ifelse(tweetsentimentbing$sentiment=="positive",1,-1)
   tweetsentimentnrc$sentimentnum = ifelse(tweetsentimentnrc$sentiment=="positive",1,-1)
 
-  news.df.bing =
-    tweetsentimentbing %>%
-    mutate(windowday = as.POSIXct(trunc.POSIXt(tweetsentimentbing$Date, units = c("days")))) %>%
-    group_by(windowday, Company) %>%
-    arrange(windowday) %>%
-    summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
-    mutate(sentavg = netsent/totalsent) %>%
-    mutate(lexicon = "Bing")
-
-  news.df.afinn =
-    tweetsentimentafinn %>%
-    mutate(windowday = as.POSIXct(trunc.POSIXt(tweetsentimentafinn$Date, units = c("days")))) %>%
-    group_by(windowday, Company) %>%
-    arrange(windowday) %>%
-    summarise(netsent = sum(score), totalsent = sum(abs(score))) %>%
-    mutate(sentavg = netsent/totalsent) %>%
-    mutate(lexicon = "Afinn")
+  # news.df.bing =
+  #   tweetsentimentbing %>%
+  #   mutate(windowday = as.POSIXct(trunc.POSIXt(tweetsentimentbing$Date, units = c("days")))) %>%
+  #   group_by(windowday, Company) %>%
+  #   arrange(windowday) %>%
+  #   summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
+  #   mutate(sentavg = netsent/totalsent) %>%
+  #   mutate(lexicon = "Bing")
+  #
+  # news.df.afinn =
+  #   tweetsentimentafinn %>%
+  #   mutate(windowday = as.POSIXct(trunc.POSIXt(tweetsentimentafinn$Date, units = c("days")))) %>%
+  #   group_by(windowday, Company) %>%
+  #   arrange(windowday) %>%
+  #   summarise(netsent = sum(score), totalsent = sum(abs(score))) %>%
+  #   mutate(sentavg = netsent/totalsent) %>%
+  #   mutate(lexicon = "Afinn")
 
   news.df.nrc =
     tweetsentimentnrc %>%
@@ -78,7 +78,8 @@ googlenewschaRt = function(filename = "R_News_21NOV17.csv"){
     mutate(sentavg = netsent/totalsent) %>%
     mutate(lexicon = "NRC")
 
-  news.df = bind_rows(news.df.bing,news.df.afinn,news.df.nrc)
+  # news.df = bind_rows(news.df.bing,news.df.afinn,news.df.nrc)
+  news.df = news.df.nrc
 
   #################
   top6 = count(news, Source) %>% arrange(desc(n)) %>% slice(1:5) %>% select(Source) %>%
@@ -89,14 +90,26 @@ googlenewschaRt = function(filename = "R_News_21NOV17.csv"){
   sources = length(news$Source)
   uniquesources = length(unique(news$Source))
 
-  plot = ggplot(data = news.df, aes(x = windowday, y = sentavg, color = lexicon)) +
-    ylim(-1,1) +
-    # geom_smooth(span = .5) +
+  addition = news %>%
+    select(Source, Date) %>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(Date, units = c("days")))) %>%
+    select(windowday, Source) %>%
+    group_by(windowday) %>%
+    summarise(n = n())
+
+  addition$scaledn = rescale(addition$n, to = c(-.25,1))
+
+plot = ggplot(data = news.df, aes(x = windowday, y = sentavg)) +
+    # ylim(-1,1) +
     geom_smooth(method = loess, span = .01) +
-    # geom_line()
-    ggtitle("News Sentiment Score Over Time", subtitle = paste("From", substr(min(news.df$windowday),1,10),"through",substr(max(news.df$windowday),1,10))) +
+    geom_line(data = addition, aes(y=scaledn)) +
+    ggtitle("News Sentiment Score and Volume Over Time", subtitle = paste("From", substr(min(news.df$windowday),1,10),"through",substr(max(news.df$windowday),1,10))) +
     labs(caption=paste(sources, "Articles from", uniquesources,"different sources \n", "Top News Sources:", top6)) +
-    xlab(NULL) + ylab("Sentiment")
+    xlab(NULL) + ylab("Sentiment") +
+    scale_y_continuous(
+      "Total Sentiment",
+      sec.axis = sec_axis(~ (.+.25) * max(addition$n)/1.25
+                          , name = "Total Articles"))
 
   nrcfacetneg = tweetsentimentnrc %>%
     group_by(Company) %>%
@@ -185,7 +198,7 @@ plot2 = ggplot() +
     # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = 'stack')
     # scale_y_reverse() +
     # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company))) +
-    ggtitle("Sentiment Added By Top News Sources") +
+    ggtitle("News Sentiment by Source and Volume Over Time") +
     labs(caption=paste("Plot created:", Sys.Date())) +
     labs(x="Date", y="Net Sentiment Added") +
     scale_y_continuous(
