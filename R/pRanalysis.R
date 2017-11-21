@@ -7,7 +7,7 @@
 #' @examples
 #' pRtwitter()
 
-pRanalysis = function(filename = "Puerto Rico 23S - 9NOV.csv"){
+pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
 
 
   require(tidyr)
