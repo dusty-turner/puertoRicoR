@@ -7,7 +7,7 @@
 #' @examples
 #' pRtwitter()
 
-pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
+pRanalysis = function(filename = "Puerto Rico 23S - 21NOV.csv"){
 
 
   require(tidyr)
@@ -17,6 +17,7 @@ pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
   require(lubridate)
   require(zoo)
   require(readr)
+  require(scales)
   # filename = "testingagainR.csv"
   df.tweet = read_csv(filename)
   df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
@@ -102,7 +103,7 @@ pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
   # plottingsentiment = bind_rows(plottingsentimentbing,plottingsentimentafinn,plottingsentimentnrc,plottingsentimentnrcspanish)
   plottingsentiment = bind_rows(plottingsentimentnrc,plottingsentimentnrcspanish)
 
-  plot =  ggplot(data=plottingsentiment, aes(x=windowday, y = rollingmean, color = Lexicon)) +
+  plot = ggplot(data=plottingsentiment, aes(x=windowday, y = rollingmean, color = Lexicon)) +
     ylim(c(-1,1)) +
     geom_smooth(method = "loess", span = .10, aes(y = sentavg)) +
     # geom_line() +
@@ -122,13 +123,17 @@ pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
 
   nrcspanishfacet =  tweetsentimentnrcspanish %>%
     mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("days")))) %>%
-    group_by(windowday, sentiment) %>%
+    group_by(windowday, Sentiment) %>%
     summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
     mutate(sentavg = netsent/totalsent) %>%
     mutate(Lexicon = "NRC Spanish")
 
-  ## Joins the english and spanish for total sentiment
-  nrcengspan = nrcfacet %>%
+  ## Make spanish sentiment words lower case
+nrcspanishfacet = nrcspanishfacet %>%
+  mutate(sentiment = tolower(Sentiment))
+
+    ## Joins the english and spanish for total sentiment
+    nrcengspan = nrcfacet %>%
     full_join(nrcspanishfacet) %>%
     group_by(windowday, sentiment) %>%
     summarise(dailysent = sum(netsent))
