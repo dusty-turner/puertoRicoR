@@ -7,13 +7,14 @@
 #' @examples
 #' googlenewschaRt
 
-googlenewschaRt = function(filename = "R_News_4NOV17.csv"){
+googlenewschaRt = function(filename = "R_News_21NOV17.csv"){
 
 
   library(lubridate)
   library(tidyverse)
   library(tidytext)
   library(ggplot2)
+  library(scales)
 
   news = read_csv(filename)
   news = news[which(complete.cases(news)),]
@@ -150,15 +151,48 @@ googlenewschaRt = function(filename = "R_News_4NOV17.csv"){
     mutate(netsent = ifelse(is.na(netsent), .0001, netsent)) %>%
     arrange(windowday)
 
-  plot2 = ggplot() +
+  # plot2 = ggplot() +
+  #   geom_area(data = nrcfacetneg, aes(x = windowday, y = netsent, fill = Company), position = "stack") +
+  #   geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = "stack") +
+  #   # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = 'stack')
+  #   # scale_y_reverse() +
+  #   # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company))) +
+  #   ggtitle("Sentiment Added By Top News Sources") +
+  #   labs(caption=paste("Plot created:", Sys.Date())) +
+  #   labs(x="Date", y="Net Sentiment Added")
+
+  ## makes the scaling happen
+  addition = news %>%
+    select(Source, Date) %>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(Date, units = c("days")))) %>%
+    select(windowday, Source) %>%
+    group_by(windowday) %>%
+    summarise(n = n())
+
+  themaxhelper =
+    # nrcfacetneg %>%
+    nrcfacetpos %>%
+    group_by(windowday) %>%
+    summarise(dailysent = sum(totalsent, na.rm = TRUE))
+
+  themax = max(themaxhelper$dailysent)
+  addition$scaledn = rescale(addition$n, to = c(min(addition$n),themax))
+
+plot2 = ggplot() +
     geom_area(data = nrcfacetneg, aes(x = windowday, y = netsent, fill = Company), position = "stack") +
     geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = "stack") +
+    geom_line(data = addition, aes(x = windowday, y = scaledn)) +
     # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company), position = 'stack')
     # scale_y_reverse() +
     # geom_area(data = nrcfacetpos, aes(x = windowday, y = netsent, fill = Company))) +
     ggtitle("Sentiment Added By Top News Sources") +
     labs(caption=paste("Plot created:", Sys.Date())) +
-    labs(x="Date", y="Net Sentiment Added")
+    labs(x="Date", y="Net Sentiment Added") +
+    scale_y_continuous(
+      "Total Sentiment",
+      sec.axis = sec_axis(~ . * max(addition$n)/max(addition$scaledn)
+                          , name = "Total Articles")
+    )
 
   plotlist = list(plot,plot2)
 
