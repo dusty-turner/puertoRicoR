@@ -25,14 +25,12 @@ pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
   max(df.tweet$created)
   df.tweet = df.tweet[which(!is.na(df.tweet$text)),]
 
-
   ######## tokenize
 
   text_df <- data_frame(line = 1:length(df.tweet$text), text = as.character(df.tweet$text), time = df.tweet$created)
 
   textcleaned = text_df %>%
     unnest_tokens(word, text)
-
 
   ##English Only
   cleanedarticle = anti_join(textcleaned,stop_words, by = "word")
@@ -112,5 +110,57 @@ pRanalysis = function(filename = "Puerto Rico 23S - 13NOV.csv"){
     labs(caption=paste("Plot created:", Sys.Date())) +
     labs(x="Date", y="Sentiment Score")
 
-  return(plot)
+## Sand Chart Creation
+
+  nrcfacet =  tweetsentimentnrc %>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("days")))) %>%
+    group_by(windowday, sentiment) %>%
+    summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
+    mutate(sentavg = netsent/totalsent) %>%
+    mutate(Lexicon = "NRC") %>%
+    ungroup()
+
+  nrcspanishfacet =  tweetsentimentnrcspanish %>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("days")))) %>%
+    group_by(windowday, sentiment) %>%
+    summarise(netsent = sum(sentimentnum), totalsent = sum(abs(sentimentnum))) %>%
+    mutate(sentavg = netsent/totalsent) %>%
+    mutate(Lexicon = "NRC Spanish")
+
+  ## Joins the english and spanish for total sentiment
+  nrcengspan = nrcfacet %>%
+    full_join(nrcspanishfacet) %>%
+    group_by(windowday, sentiment) %>%
+    summarise(dailysent = sum(netsent))
+
+  ## creates the right side
+  addition = cleanedarticle %>%
+    distinct(line, time)%>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("days")))) %>%
+    group_by(windowday) %>%
+    count(windowday)
+
+  ## makes the scaling happen
+  themax = max(data.frame(nrcengspan[nrcengspan$sentiment=="positive",3]+abs(nrcengspan[nrcengspan$sentiment=="negative",3])))
+  addition$scaledn = rescale(addition$n, to = c(min(addition$n),max(themax)))
+
+  nrcengspan = nrcengspan %>%
+    left_join(addition, by = "windowday")
+
+  ## Finally plots the data
+  plot2 = ggplot(nrcengspan, aes(x = windowday, y = abs(dailysent), fill = sentiment)) +
+    geom_area() +
+    geom_line(aes(y = scaledn)) +
+    ggtitle("Twitter Sentiment Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
+    labs(caption=paste("Plot created:", Sys.Date())) +
+    labs(x="Date", y="Net Sentiment Added") +
+    scale_y_continuous(
+      "Total Sentiment",
+      sec.axis = sec_axis(~ . * max(addition$n) /max(data.frame(nrcengspan[nrcengspan$sentiment=="positive",3]+abs(nrcengspan[nrcengspan$sentiment=="negative",3])))
+                          , name = "Total Twets")
+    )
+
+  plotlist = list(plot, plot2)
+
+  return(plotlist)
 }
