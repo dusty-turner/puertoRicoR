@@ -103,13 +103,30 @@ pRanalysis = function(filename = "Puerto Rico 23S - 21NOV.csv"){
   # plottingsentiment = bind_rows(plottingsentimentbing,plottingsentimentafinn,plottingsentimentnrc,plottingsentimentnrcspanish)
   plottingsentiment = bind_rows(plottingsentimentnrc,plottingsentimentnrcspanish)
 
-  plot = ggplot(data=plottingsentiment, aes(x=windowday, y = rollingmean, color = Lexicon)) +
-    ylim(c(-1,1)) +
-    geom_smooth(method = "loess", span = .10, aes(y = sentavg)) +
-    # geom_line() +
+
+  ## creates the right side
+  addition = cleanedarticle %>%
+    distinct(line, time)%>%
+    mutate(windowday = as.POSIXct(trunc.POSIXt(time, units = c("days")))) %>%
+    group_by(windowday) %>%
+    count(windowday) %>%
+    mutate(Lexicon = "Test")
+
+  ## makes the scaling happen
+  themax = max(addition$n)
+  addition$scaledn = rescale(addition$n, to = c(-.5,1))
+
+  plot = ggplot() +
+    # ylim(c(-1,1)) +
+    geom_smooth(data = plottingsentiment, method = "loess", span = .10, aes(x = windowday, y = sentavg, color = Lexicon)) +
+    geom_line(data = addition, aes(x = windowday, y = scaledn, alpha = .5)) +
     ggtitle("Twitter Sentiment Score Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
-    labs(x="Date", y="Sentiment Score")
+    labs(x="Date", y="Sentiment Score") +
+      scale_y_continuous(
+        "Net Sentiment",
+        sec.axis = sec_axis(~ (.+.5) * max(addition$n)/1.5
+                            , name = "Total Tweets Per Day"))
 
 ## Sand Chart Creation
 
@@ -162,7 +179,7 @@ nrcspanishfacet = nrcspanishfacet %>%
     scale_y_continuous(
       "Total Sentiment",
       sec.axis = sec_axis(~ . * max(addition$n) /max(data.frame(nrcengspan[nrcengspan$sentiment=="positive",3]+abs(nrcengspan[nrcengspan$sentiment=="negative",3])))
-                          , name = "Total Twets")
+                          , name = "Total Tweets Per Day")
     )
 
   plotlist = list(plot, plot2)
