@@ -186,3 +186,4 @@ nrcspanishfacet = nrcspanishfacet %>%
 
   return(plotlist)
 }
+
