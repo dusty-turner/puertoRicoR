@@ -69,6 +69,7 @@ pRtwitter = function(searchterm = "Puerto Rico",
 
     df.tweet = rbind(df.tweet, motherofalldataframes)
     df.tweet = distinct(df.tweet)
+    df.tweet = df.tweet %>% distinct(text, created, screenName, .keep_all = TRUE)
     # df.tweet = distinct((full_join(df.tweet, motherofalldataframes, by = c("text", "created"))))
     df.tweet = df.tweet[which(!is.na(df.tweet$text)),]
     write.csv(df.tweet, newdataname)

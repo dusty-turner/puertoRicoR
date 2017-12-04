@@ -25,7 +25,6 @@ pRanalysis = function(filename = "Puerto Rico 23S - 21NOV.csv"){
   df.tweet = df.tweet[,-c(1)]
   max(df.tweet$created)
   df.tweet = df.tweet[which(!is.na(df.tweet$text)),]
-  df.tweet =df.tweet %>% distinct(text, created, screenName)
 
   ######## tokenize
 
