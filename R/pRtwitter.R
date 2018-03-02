@@ -28,11 +28,14 @@ pRtwitter = function(searchterm = "Puerto Rico",
   require(tidytext)
   require(ggplot2)
   require(lubridate)
-
+  require(base64enc)
+  # install.packages("httr")
+  # devtools::install_github("jrowen/twitteR")
+  # devtools::install_github("jrowen/twitteR", ref = "oauth_httr_1_0")
 
   # Set API Keys
-  api_key <- "t2Z0bBeYOEKf57x1fwioYHWj5"
-  api_secret <- "ogeOnkBpGscHH0HrEaZwnzKp4gnm5g38SiWqwZ8lHbDFHGv5QN"
+  api_key <- "qUieRdpQjDpXbvbsvJR6upXRP"
+  api_secret <- "bSexK8RvqCu7wAQqrrzSV7kPp8oySwxTisvdVGALBbZaDIKI3a"
   access_token <- "232263908-8JfnQTXlCnQzs0TiyJuLSB3rEl70B2CJvvPcpUvS"
   access_token_secret <- "dHvdONwFo2XMyTL2UYPI2WRo7Dvp7hG5A9YFR3Vq0858B"
   setup_twitter_oauth(api_key, api_secret, access_token, access_token_secret)
