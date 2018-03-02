@@ -10,7 +10,9 @@
 pRanalysis = function(filename = "Puerto Rico Latest.csv"){
 
 
-  require(tidyverse)
+  require(dplyr)
+  require(tidyr)
+  require(readr)
   require(tidytext)
   require(ggplot2)
   require(zoo)
