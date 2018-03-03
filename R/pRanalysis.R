@@ -17,7 +17,7 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 2 MAR best.csv"){
   require(ggplot2)
   require(zoo)
   require(scales)
-  # filename = "testingagainR.csv"
+  # filename = "Puerto Rico Latest.csv"
   df.tweet = read_csv(filename)
   # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
   df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
