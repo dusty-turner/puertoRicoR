@@ -121,7 +121,7 @@ pRanalysis = function(filename = "Puerto Rico 23 Sept - 2 MAR best.csv"){
     geom_line(data = addition, aes(x = windowday, y = scaledn, alpha = .5)) +
     ggtitle("Twitter Sentiment Score Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
-    labs(x="Date", y="Sentiment Score") +
+    labs(x="Date", y="Sentiment Score", alpha = NULL) +
       scale_y_continuous(
         "Net Sentiment",
         sec.axis = sec_axis(~ (.+.5) * max(addition$n)/1.5
