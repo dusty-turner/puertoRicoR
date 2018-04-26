@@ -174,7 +174,7 @@ nrcspanishfacet = nrcspanishfacet %>%
   ## Finally plots the data
   # plot2 = ggplot(nrcengspan, aes(x = windowday, y = abs(dailysent), fill = sentiment)) +
   plot2 = ggplot(nrcengspan, aes(x = windowday, y = abs(dailysent))) +
-    geom_area(aes(group = sentiment, fill = sentiment)) +
+    geom_area(aes(group = sentiment, fill = sentiment), legend.position="bottom") +
     geom_line(aes(y = scaledn)) +
     ggtitle("Twitter Sentiment Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
