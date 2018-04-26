@@ -119,7 +119,7 @@ pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
 
   plot = ggplot() +
     # ylim(c(-1,1)) +
-    geom_smooth(data = plottingsentiment, method = "loess", span = .10, aes(x = windowday, y = sentavg, color = Lexicon), legend.position="bottom") +
+    geom_smooth(data = plottingsentiment, method = "loess", span = .10, aes(x = windowday, y = sentavg, color = Lexicon)) +
     geom_line(data = addition, aes(x = windowday, y = scaledn), alpha = .5) +
     ggtitle("Twitter Sentiment Score Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
@@ -127,7 +127,8 @@ pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
       scale_y_continuous(
         "Net Sentiment",
         sec.axis = sec_axis(~ (.+.5) * max(addition$n)/1.5
-                            , name = "Total Tweets Per Day"))
+                            , name = "Total Tweets Per Day")) +
+    theme(legend.position="bottom")
 
 
 ## Sand Chart Creation
@@ -174,7 +175,7 @@ nrcspanishfacet = nrcspanishfacet %>%
   ## Finally plots the data
   # plot2 = ggplot(nrcengspan, aes(x = windowday, y = abs(dailysent), fill = sentiment)) +
   plot2 = ggplot(nrcengspan, aes(x = windowday, y = abs(dailysent))) +
-    geom_area(aes(group = sentiment, fill = sentiment), legend.position="bottom") +
+    geom_area(aes(group = sentiment, fill = sentiment)) +
     geom_line(aes(y = scaledn)) +
     ggtitle("Twitter Sentiment Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
@@ -183,7 +184,8 @@ nrcspanishfacet = nrcspanishfacet %>%
       "Total Sentiment",
       sec.axis = sec_axis(~ . * max(addition$n) /max(data.frame(nrcengspan[nrcengspan$sentiment=="positive",3]+abs(nrcengspan[nrcengspan$sentiment=="negative",3])))
                           , name = "Total Tweets Per Day")
-    )
+    )+
+    theme(legend.position="bottom")
 
   plotlist = list(plot, plot2)
 
