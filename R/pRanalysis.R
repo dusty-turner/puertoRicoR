@@ -127,7 +127,8 @@ pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
       scale_y_continuous(
         "Net Sentiment",
         sec.axis = sec_axis(~ (.+.5) * max(addition$n)/1.5
-                            , name = "Total Tweets Per Day"))
+                            , name = "Total Tweets Per Day")) +
+    theme(legend.position="bottom")
 
 ## Sand Chart Creation
 
