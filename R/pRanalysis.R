@@ -119,7 +119,7 @@ pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
 
   plot = ggplot() +
     # ylim(c(-1,1)) +
-    geom_smooth(data = plottingsentiment, method = "loess", span = .10, aes(x = windowday, y = sentavg, color = Lexicon)) +
+    geom_smooth(data = plottingsentiment, method = "loess", span = .10, aes(x = windowday, y = sentavg, color = Lexicon), legend.position="bottom") +
     geom_line(data = addition, aes(x = windowday, y = scaledn), alpha = .5) +
     ggtitle("Twitter Sentiment Score Over Time", subtitle = paste("From", substr(min(plottingsentiment$windowday),1,10),"through",substr(max(plottingsentiment$windowday),1,10))) +
     labs(caption=paste("Plot created:", Sys.Date())) +
@@ -127,8 +127,8 @@ pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
       scale_y_continuous(
         "Net Sentiment",
         sec.axis = sec_axis(~ (.+.5) * max(addition$n)/1.5
-                            , name = "Total Tweets Per Day")) +
-    theme(legend.position="bottom")
+                            , name = "Total Tweets Per Day"))
+
 
 ## Sand Chart Creation
 
