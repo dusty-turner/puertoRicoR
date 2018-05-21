@@ -55,8 +55,8 @@ pRtwitter = function(searchterm = "Puerto Rico",
   if(file.exists(olddataname)==TRUE){
     # olddataname = "Puerto Rico 23 Sept - 26 OCT best.csv"
     df.tweet = read.csv(olddataname)
-    # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
-    df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
+    df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
+    # df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
     df.tweet = df.tweet[,-c(1)]
 
     #Adding newest data to old data in a csv
