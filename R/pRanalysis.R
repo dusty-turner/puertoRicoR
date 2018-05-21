@@ -7,7 +7,7 @@
 #' @examples
 #' pRtwitter()
 
-pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
+pRanalysis = function(filename = "Puerto Rico 23S - 17MAY.csv"){
 
 
   require(dplyr)
@@ -19,6 +19,7 @@ pRanalysis = function(filename = "Puerto Rico 23S - 2MAR.csv"){
   require(scales)
   # filename = "Puerto Rico Latest.csv"
   df.tweet = read_csv(filename)
+  # df.tweet = read_csv(file.choose())
   # df.tweet$created
   # range(df.tweet$created)
   df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
