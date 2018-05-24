@@ -15,10 +15,10 @@
 
 pRtwitter = function(searchterm = "Puerto Rico",
                      n = 100000,
-                     since = '2018-3-1',
-                     until = '2018-3-5',
-                     olddataname = "Puerto Rico 23S - 2MAR.csv",
-                     newdataname = "Puerto Rico 23S - 5 MAR.csv"){
+                     since = '2018-5-20',
+                     until = '2018-5-24',
+                     olddataname = "Puerto Rico 23S - 21MAY.csv",
+                     newdataname = "Puerto Rico 23S - 24 MAR.csv"){
 
   require(twitteR)
   require(ROAuth)
@@ -55,6 +55,7 @@ pRtwitter = function(searchterm = "Puerto Rico",
   if(file.exists(olddataname)==TRUE){
     # olddataname = "Puerto Rico 23 Sept - 26 OCT best.csv"
     df.tweet = read.csv(olddataname)
+    # df.tweet = read.csv(choose.files())
     # df.tweet$created = as.POSIXct(df.tweet$created,format = "%Y-%m-%d %H:%M", tz = "UTC")
     df.tweet$created = as.POSIXct(df.tweet$created,format = "%m/%d/%Y %H:%M", tz = "UTC")
     df.tweet = df.tweet[,-c(1)]
