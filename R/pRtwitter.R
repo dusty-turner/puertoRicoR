@@ -15,10 +15,10 @@
 
 pRtwitter = function(searchterm = "Puerto Rico",
                      n = 100000,
-                     since = '2018-5-20',
-                     until = '2018-5-24',
-                     olddataname = "Puerto Rico 23S - 21MAY.csv",
-                     newdataname = "Puerto Rico 23S - 24 MAR.csv"){
+                     since = '2018-5-23',
+                     until = '2018-5-29',
+                     olddataname = "Puerto Rico 23S - 24MAY.csv",
+                     newdataname = "Puerto Rico 23S - 29MAY.csv"){
 
   require(twitteR)
   require(ROAuth)
